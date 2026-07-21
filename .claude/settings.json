@@ -1,37 +1,33 @@
 {
   "permissions": {
     "allow": [
-      "npm",
-      "npm install",
-      "npm run dev",
-      "npm run build",
-      "npm run test",
-      "npm run lint",
-      "git status",
-      "git log",
-      "git diff",
-      "git add",
-      "git commit",
-      "git branch",
-      "git checkout",
-      "gh issue list",
-      "gh issue view",
-      "gh pr list",
-      "gh pr view"
+      "Bash(npm *)",
+      "Bash(git status *)",
+      "Bash(git log *)",
+      "Bash(git diff *)",
+      "Bash(git add *)",
+      "Bash(git commit *)",
+      "Bash(git branch *)",
+      "Bash(git checkout *)",
+      "Bash(gh issue list *)",
+      "Bash(gh issue view *)",
+      "Bash(gh pr list *)",
+      "Bash(gh pr view *)"
     ],
     "ask": [
-      "git push",
-      "git rebase",
-      "gh pr create",
-      "gh pr merge",
-      "git reset"
+      "Bash(git push *)",
+      "Bash(git rebase *)",
+      "Bash(git reset *)",
+      "Bash(gh pr create *)",
+      "Bash(gh pr merge *)"
     ],
     "deny": [
-      "rm -rf",
-      "curl -X",
-      "Read.*\\.env",
-      "Read.*credentials",
-      "git push --force"
+      "Bash(rm -rf *)",
+      "Bash(curl -X *)",
+      "Bash(git push --force *)",
+      "Bash(git push -f *)",
+      "Read(**/.env*)",
+      "Read(**/credentials*)"
     ]
   },
   "model": "claude-opus-4-8"

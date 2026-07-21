@@ -1,0 +1,20 @@
+{
+  "name": "pokemon_apply_v2",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "build": "nuxt build",
+    "dev": "nuxt dev",
+    "generate": "nuxt generate",
+    "preview": "nuxt preview",
+    "test": "vitest",
+    "lint": "nuxi lint",
+    "typecheck": "nuxi typecheck",
+    "postinstall": "nuxt prepare"
+  },
+  "dependencies": {
+    "nuxt": "^4.5.0",
+    "vue": "^3.5.40",
+    "vue-router": "^5.2.0"
+  }
+}

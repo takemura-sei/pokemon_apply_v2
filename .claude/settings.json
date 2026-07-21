@@ -1,0 +1,38 @@
+{
+  "permissions": {
+    "allow": [
+      "npm",
+      "npm install",
+      "npm run dev",
+      "npm run build",
+      "npm run test",
+      "npm run lint",
+      "git status",
+      "git log",
+      "git diff",
+      "git add",
+      "git commit",
+      "git branch",
+      "git checkout",
+      "gh issue list",
+      "gh issue view",
+      "gh pr list",
+      "gh pr view"
+    ],
+    "ask": [
+      "git push",
+      "git rebase",
+      "gh pr create",
+      "gh pr merge",
+      "git reset"
+    ],
+    "deny": [
+      "rm -rf",
+      "curl -X",
+      "Read.*\\.env",
+      "Read.*credentials",
+      "git push --force"
+    ]
+  },
+  "model": "claude-opus-4-8"
+}

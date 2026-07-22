@@ -15,6 +15,13 @@ npm run dev
 
 詳細は [setup.md](.claude/docs/setup.md)
 
+## ディレクトリ構造
+
+`app/`（クライアント）、`server/`（Nitro API）、`shared/`（両者で共有する型・定数）の3層。
+コンポーネントとロジックは Nuxt の規約ディレクトリを第一階層とし、その下を機能（`pokedex` / `game`）で分ける。
+
+詳細は [architecture.md](.claude/docs/architecture.md)
+
 ## 開発フロー
 
 **issue駆動 + 1セッション1タスク + TDD**

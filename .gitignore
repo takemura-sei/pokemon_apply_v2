@@ -25,3 +25,6 @@ logs
 
 # Claude settings
 .claude/settings.local.json
+
+# MCP configuration (personal project ref)
+.mcp.json

@@ -44,7 +44,7 @@ pokemon_apply_v2/
 │   │   └── game/
 │   │       └── score.post.ts
 │   └── utils/
-│       └── prisma.ts             # PrismaClient シングルトン
+│       └── supabase.ts           # サーバー側 Supabase クライアント（service role）
 │
 ├── shared/                       # app / server 両方から自動 import（Nuxt 4 機能）
 │   ├── types/
@@ -52,9 +52,8 @@ pokemon_apply_v2/
 │   │   └── game.ts
 │   └── utils/                    # 両側で使う定数・変換関数
 │
-├── prisma/
-│   ├── schema.prisma
-│   └── migrations/
+├── supabase/
+│   └── migrations/               # DB スキーマのマイグレーション（Supabase CLI）
 │
 ├── tests/                        # src/ の対応ディレクトリごとにミラーリング
 │   ├── app.spec.ts               # src/app.vue に対応
@@ -104,6 +103,20 @@ Nuxt 4 のデフォルトは `app/` だが、明示的に `srcDir: 'src/'`（[nu
 
 Nuxt 4 の `shared/` は `app/` と `server/` の両方から自動 import される。API のレスポンス型など、両側で使う定義はここに置く。
 
+### スタイルは TailwindCSS v4
+
+`@tailwindcss/vite` プラグインを `nuxt.config.ts` の `vite.plugins` に登録し、エントリを `src/assets/css/main.css`（`@import "tailwindcss";` の 1 行）に置いて `css` オプションで読み込む。
+
+v4 では `tailwind.config.js` を作らない。テーマの拡張（色・フォントなど）が必要になったら `main.css` の `@theme` ブロックに書く。
+
+```css
+@import "tailwindcss";
+
+@theme {
+  --color-pokedex-red: #ee1515;
+}
+```
+
 ### テストは tests/ に集約し、src/ の構造をミラーリング
 
 コンポーネント隣接（`*.spec.ts` を並べる）ではなく `tests/` に分離する。Nuxt の自動 import 走査対象にテストファイルが混ざるのを避けるため。
@@ -112,16 +125,13 @@ Nuxt 4 の `shared/` は `app/` と `server/` の両方から自動 import さ�
 
 TDD 方針（[development.md](development.md)）に沿って、テスト対象のロジックは `src/utils/` `src/composables/` に純粋関数として切り出す。
 
-### Prisma を DB スキーマの単一の正とする
+### DB は Supabase に一本化する（Prisma は使わない）
 
-Prisma と Supabase を併用するが、役割を分ける。
+スキーマ定義・マイグレーション・認証・Storage・クライアント SDK をすべて Supabase で扱う。マイグレーションは Supabase CLI で `supabase/migrations/` に置く。
 
-| ツール | 役割 |
-|---|---|
-| Prisma | スキーマ定義・マイグレーション（`prisma/migrations/`） |
-| Supabase | 認証・Storage・クライアント SDK |
+Prisma との併用も検討したが、採用しない。スキーマの正が `prisma/migrations/` と Supabase 側の 2 箇所に分かれ、RLS ポリシーのように Prisma スキーマで表現できないものが Supabase 側にしか書けず、結局どちらを見ればよいか分からなくなるため。
 
-`supabase/migrations/` は **作らない**。両方に置くとスキーマの正が 2 箇所になるため。
+`server/utils/supabase.ts` にサーバー側クライアント（service role キー使用）を置く。RLS を迂回できるため、クライアント側の `$supabase` とは明確に分ける。
 
 ## 命名規則
 

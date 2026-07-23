@@ -20,9 +20,11 @@
 
 ### テストの書き方
 
-- テストは `tests/` 配下に `*.spec.ts` で作成
-  - `tests/unit/` — utils / composables などのユニットテスト
-  - `tests/components/` — コンポーネントテスト（`mountSuspended` を使用）
+- テストは `tests/` 配下に `*.spec.ts` で作成し、`src/` の構造をミラーリングする
+  - `src/utils/damage.ts` → `tests/utils/damage.spec.ts`
+  - `src/composables/use-pokedex.ts` → `tests/composables/use-pokedex.spec.ts`
+  - `src/components/pokedex/PokemonCard.vue` → `tests/components/pokedex/PokemonCard.spec.ts`（`mountSuspended` を使用）
+  - 配置ルールの詳細は [architecture.md](architecture.md) を参照
 - 共通セットアップは `tests/setup.ts` に追記
 - 実行コマンド
   - `npm run test` — 全テストを1回実行（コミット前に必ず実行）

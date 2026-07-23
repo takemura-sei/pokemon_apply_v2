@@ -10,4 +10,11 @@ export default defineNuxtConfig({
       supabaseAnonKey: process.env.NUXT_PUBLIC_SUPABASE_ANON_KEY,
     },
   },
+  typescript: {
+    // tests/ は Nuxt が生成する tsconfig.app.json の include に入らないため明示的に追加する。
+    // パスは .nuxt/ からの相対。
+    tsConfig: {
+      include: ['../tests/**/*'],
+    },
+  },
 })

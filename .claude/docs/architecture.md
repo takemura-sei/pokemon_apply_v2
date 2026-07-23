@@ -103,6 +103,12 @@ Nuxt 4 のデフォルトは `app/` だが、明示的に `srcDir: 'src/'`（[nu
 
 Nuxt 4 の `shared/` は `app/` と `server/` の両方から自動 import される。API のレスポンス型など、両側で使う定義はここに置く。
 
+### Supabase クライアントは composable 経由で取得する
+
+`plugins/supabase.client.ts` が `$supabase` を provide し、`composables/use-supabase.ts` がそれを型付きで返す。コンポーネント / store / services からは `useNuxtApp().$supabase` を直接触らず `useSupabase()` を使う。
+
+環境変数の検証は `utils/supabase-config.ts` の `resolveSupabaseConfig()` に純粋関数として切り出し、プラグインから呼ぶ。`runtimeConfig` の型は Nuxt が `string` に広げて生成するため型チェックでは欠落を検出できず、実行時に弾く必要がある（[development.md](development.md) 参照）。
+
 ### スタイルは TailwindCSS v4
 
 `@tailwindcss/vite` プラグインを `nuxt.config.ts` の `vite.plugins` に登録し、エントリを `src/assets/css/main.css`（`@import "tailwindcss";` の 1 行）に置いて `css` オプションで読み込む。

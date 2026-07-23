@@ -4,21 +4,27 @@
 
 ```
 pokemon_apply_v2/
-├── app/                          # Nuxt 4 の srcDir（クライアント側）
+├── src/                          # Nuxt 4 の srcDir（クライアント側）
 │   ├── app.vue
 │   ├── assets/
 │   │   └── css/main.css          # Tailwind エントリ
 │   ├── components/
 │   │   ├── ui/                   # 汎用パーツ（BaseButton, BaseCard, BaseModal）
-│   │   ├── pokedex/              # 図鑑機能のコンポーネント
-│   │   └── game/                 # ゲーム機能のコンポーネント
+│   │   ├── pokedex/              # 図鑑機能のコンポーネント（ページの実処理はここに書く）
+│   │   └── game/                 # ゲーム機能のコンポーネント（ページの実処理はここに書く）
 │   ├── composables/
 │   │   ├── use-supabase.ts       # $supabase のラッパー
 │   │   ├── use-pokedex.ts
 │   │   └── use-game.ts
+│   ├── stores/                   # Pinia ストア
+│   │   ├── pokedex.ts
+│   │   └── game.ts
+│   ├── services/                 # API 呼び出し用関数（fetch のラッパー）
+│   │   ├── pokemon.ts
+│   │   └── game.ts
 │   ├── layouts/
 │   │   └── default.vue
-│   ├── pages/
+│   ├── pages/                    # データの受け渡しに徹する（ロジックは書かない）
 │   │   ├── index.vue
 │   │   ├── pokedex/
 │   │   │   ├── index.vue         # /pokedex 一覧
@@ -50,9 +56,14 @@ pokemon_apply_v2/
 │   ├── schema.prisma
 │   └── migrations/
 │
-├── tests/
-│   ├── unit/                     # utils / composables
-│   ├── components/               # @nuxt/test-utils
+├── tests/                        # src/ の対応ディレクトリごとにミラーリング
+│   ├── app.spec.ts               # src/app.vue に対応
+│   ├── components/               # src/components に対応（@nuxt/test-utils）
+│   ├── composables/              # src/composables に対応
+│   ├── stores/                   # src/stores に対応
+│   ├── services/                 # src/services に対応
+│   ├── utils/                    # src/utils に対応
+│   ├── sample.spec.ts            # vitest 動作確認用
 │   └── setup.ts
 │
 ├── public/
@@ -61,6 +72,25 @@ pokemon_apply_v2/
 ```
 
 ## 設計方針
+
+### srcDir は `src/`
+
+Nuxt 4 のデフォルトは `app/` だが、明示的に `srcDir: 'src/'`（[nuxt.config.ts](../../nuxt.config.ts)）を指定して `src/` に変更している。`~` エイリアスは変わらず `src/` を指す。
+
+### pages は薄く、実処理は components に書く
+
+`pages/` はルーティングとデータの受け渡し（props 経由でコンポーネントに流す、composable / store から取得した値を渡す）に徹し、ロジックは一切書かない。実際の表示・状態操作・イベントハンドリングはすべて `components/pokedex/` `components/game/` 配下のコンポーネントに実装する。
+
+- テストしやすくする（ページごと `@nuxt/test-utils` でマウントせず、コンポーネント単体でテストできる）
+- ルーティング変更とロジック変更の影響範囲を分離する
+
+### stores/ で Pinia によるグローバル状態管理
+
+`@pinia/nuxt` を導入し、`stores/` にストアを置く。ページ間・コンポーネント間で共有する状態（図鑑のお気に入り、ゲームのスコアなど）はここに集約し、コンポーネントローカルな状態は composable や `ref` で十分な場合は無理に store 化しない。
+
+### services/ で API 呼び出しを一元化
+
+`services/` に `$fetch` / `useFetch` をラップした関数を置き、`server/api/` へのリクエストをここに集約する。コンポーネントや store から直接 `$fetch` を呼ばず、`services/pokemon.ts` のような関数経由でアクセスすることで、エンドポイントや型の変更時の影響範囲を1箇所にまとめる。
 
 ### レイヤー優先 + 機能サブディレクトリ
 
@@ -74,11 +104,13 @@ pokemon_apply_v2/
 
 Nuxt 4 の `shared/` は `app/` と `server/` の両方から自動 import される。API のレスポンス型など、両側で使う定義はここに置く。
 
-### テストは tests/ に集約
+### テストは tests/ に集約し、src/ の構造をミラーリング
 
-コンポーネント隣接（`*.spec.ts` を並べる）ではなく分離する。Nuxt の自動 import 走査対象にテストファイルが混ざるのを避けるため。
+コンポーネント隣接（`*.spec.ts` を並べる）ではなく `tests/` に分離する。Nuxt の自動 import 走査対象にテストファイルが混ざるのを避けるため。
 
-TDD 方針（[development.md](development.md)）に沿って、テスト対象のロジックは `app/utils/` `app/composables/` に純粋関数として切り出す。
+`tests/` 配下は `src/composables/` → `tests/composables/` のように、対応する `src/` のディレクトリと同じ名前・同じ階層で作る。テスト対象がどこにあるか探しやすくするため。
+
+TDD 方針（[development.md](development.md)）に沿って、テスト対象のロジックは `src/utils/` `src/composables/` に純粋関数として切り出す。
 
 ### Prisma を DB スキーマの単一の正とする
 

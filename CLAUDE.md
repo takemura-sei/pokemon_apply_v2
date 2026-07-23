@@ -17,7 +17,7 @@ npm run dev
 
 ## ディレクトリ構造
 
-`app/`（クライアント）、`server/`（Nitro API）、`shared/`（両者で共有する型・定数）の3層。
+`src/`（クライアント）、`server/`（Nitro API）、`shared/`（両者で共有する型・定数）の3層。
 コンポーネントとロジックは Nuxt の規約ディレクトリを第一階層とし、その下を機能（`pokedex` / `game`）で分ける。
 
 詳細は [architecture.md](.claude/docs/architecture.md)

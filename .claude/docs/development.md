@@ -18,6 +18,16 @@
 2. 実装
 3. リファクタリング
 
+### テストの書き方
+
+- テストは `tests/` 配下に `*.spec.ts` で作成
+  - `tests/unit/` — utils / composables などのユニットテスト
+  - `tests/components/` — コンポーネントテスト（`mountSuspended` を使用）
+- 共通セットアップは `tests/setup.ts` に追記
+- 実行コマンド
+  - `npm run test` — 全テストを1回実行（コミット前に必ず実行）
+  - `npm run test:watch` — ウォッチモードで実行（TDD 中はこちら）
+
 ## コーディング規約
 
 | 対象 | 規則 | 例 |

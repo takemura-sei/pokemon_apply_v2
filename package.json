@@ -9,7 +9,8 @@
     "preview": "nuxt preview",
     "test": "vitest run",
     "test:watch": "vitest",
-    "lint": "nuxi lint",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
     "typecheck": "nuxi typecheck",
     "postinstall": "nuxt prepare"
   },
@@ -23,8 +24,10 @@
     "vue-router": "^5.2.0"
   },
   "devDependencies": {
+    "@nuxt/eslint": "^1.16.0",
     "@nuxt/test-utils": "^4.0.3",
     "@vue/test-utils": "^2.4.11",
+    "eslint": "^10.7.0",
     "happy-dom": "^20.11.1",
     "vitest": "^4.1.10"
   }

@@ -28,6 +28,26 @@
   - `npm run test` — 全テストを1回実行（コミット前に必ず実行）
   - `npm run test:watch` — ウォッチモードで実行（TDD 中はこちら）
 
+## リント
+
+`@nuxt/eslint` を使用する。ルールは `eslint.config.mjs` で `withNuxt()` を通して定義し、Nuxt が生成する設定（`.nuxt/eslint.config.mjs`）をベースにする。
+
+- 実行コマンド
+  - `npm run lint` — 全ファイルをチェック（コミット前に必ず実行）
+  - `npm run lint:fix` — 自動修正できるものを修正
+- 対象は `src/` `tests/` と設定ファイル群。`.nuxt/` `.output/` などの生成物は自動で除外される
+- ルールを追加・変更する場合は `eslint.config.mjs` の `withNuxt()` の引数に書く
+
+```js
+export default withNuxt(
+  {
+    rules: {
+      'vue/multi-word-component-names': 'off',
+    },
+  },
+)
+```
+
 ## コーディング規約
 
 | 対象 | 規則 | 例 |

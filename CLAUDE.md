@@ -4,12 +4,15 @@
 
 ## 技術スタック
 
-Nuxt 4, Vue 3, TypeScript, Vitest, Supabase, Prisma, TailwindCSS
+Nuxt 4, Vue 3, TypeScript, Pinia, TailwindCSS v4, Supabase, Vitest, ESLint
+
+DB スキーマは Supabase 側で管理する（Prisma は使わない）。
 
 ## クイックスタート
 
 ```bash
 npm install
+cp .env.example .env   # Supabase の接続情報を設定
 npm run dev
 ```
 

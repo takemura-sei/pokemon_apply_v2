@@ -29,6 +29,8 @@
     "@vue/test-utils": "^2.4.11",
     "eslint": "^10.7.0",
     "happy-dom": "^20.11.1",
-    "vitest": "^4.1.10"
+    "typescript": "^6.0.3",
+    "vitest": "^4.1.10",
+    "vue-tsc": "^3.3.8"
   }
 }

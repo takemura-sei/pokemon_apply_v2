@@ -48,6 +48,21 @@ export default withNuxt(
 )
 ```
 
+## 型チェック
+
+`vue-tsc` を使用する（`nuxi typecheck` が内部で呼ぶ）。
+
+- 実行コマンド
+  - `npm run typecheck` — 型チェック（コミット前に必ず実行）
+- 対象は `src/` `server/` `shared/` `tests/` と `nuxt.config.ts`
+- `tests/` は Nuxt が生成する `tsconfig.app.json` の include に入らないため、`nuxt.config.ts` の `typescript.tsConfig.include` で明示的に追加している。テストコードも型チェックの対象に含める方針
+
+### runtimeConfig の型は実行時の値を保証しない
+
+`runtimeConfig` の値は Nuxt が `string` に広げて型定義を生成する。`process.env.X` から読んでいて実際は `undefined` になりうる場合でも、型の上では `string` になり型チェックを通過する。
+
+環境変数の欠落は型ではなく実行時のバリデーションで弾くこと。
+
 ## コーディング規約
 
 | 対象 | 規則 | 例 |

@@ -52,8 +52,8 @@ pokemon_apply_v2/
 │   │   └── game.ts
 │   └── utils/                    # 両側で使う定数・変換関数
 │
-├── supabase/
-│   └── migrations/               # DB スキーマのマイグレーション（Supabase CLI）
+│   （supabase/migrations/ は置かない。DB は他プロジェクトと共有のため
+│    スキーマの正は Supabase 側。詳細は下記「DB は Supabase に一本化する」を参照）
 │
 ├── tests/                        # src/ の対応ディレクトリごとにミラーリング
 │   ├── app.spec.ts               # src/app.vue に対応
@@ -133,11 +133,31 @@ TDD 方針（[development.md](development.md)）に沿って、テスト対象�
 
 ### DB は Supabase に一本化する（Prisma は使わない）
 
-スキーマ定義・マイグレーション・認証・Storage・クライアント SDK をすべて Supabase で扱う。マイグレーションは Supabase CLI で `supabase/migrations/` に置く。
+スキーマ定義・認証・Storage・クライアント SDK をすべて Supabase で扱う。
 
 Prisma との併用も検討したが、採用しない。スキーマの正が `prisma/migrations/` と Supabase 側の 2 箇所に分かれ、RLS ポリシーのように Prisma スキーマで表現できないものが Supabase 側にしか書けず、結局どちらを見ればよいか分からなくなるため。
 
 `server/utils/supabase.ts` にサーバー側クライアント（service role キー使用）を置く。RLS を迂回できるため、クライアント側の `$supabase` とは明確に分ける。
+
+### スキーマの正は Supabase 側（DB を他プロジェクトと共有する）
+
+**この DB（Supabase プロジェクト `TS-database`）は無料枠の都合で他プロジェクトと共有している。** 同じ `public` スキーマにタイピングゲーム用のテーブル（`words` / `match_results` / `profiles`）も同居しており、本アプリが使うのは `Pokemon` テーブル（第1世代151件）。**他プロジェクトのテーブルには一切触れない。**
+
+このため、**`supabase/migrations/` によるマイグレーション管理は行わない**。理由:
+
+- `supabase db pull` は `public` 全体を吸い上げるため、他プロジェクトのテーブル定義まで本リポジトリのマイグレーションに巻き込む
+- 逆に他プロジェクト側が `db push` すれば、本リポジトリの定義と衝突する
+- 共有 DB では「1リポジトリ = 1マイグレーション履歴」という前提が成り立たない
+
+したがって **スキーマの正は常に Supabase 側（ダッシュボード / MCP で見える実 DB）** とする。スキーマ変更が必要なときは:
+
+- MCP の `execute_sql`（DDL 含む）または Supabase ダッシュボードで直接適用する
+- 変更内容は該当 issue / PR の本文に SQL を残し、リポジトリ上の記録とする
+- 型は MCP の `generate_typescript_types` で生成し直す（[setup.md](setup.md) 参照）
+
+#### `Pokemon` テーブルは Prisma 製の既存資産
+
+`Pokemon` テーブルと `_prisma_migrations` は、以前このプロジェクトを Prisma で作っていた頃の資産がそのまま残ったもの。「Prisma は使わない」方針の下でも、テーブル名が `"Pokemon"`（大文字始まり）、カラムが `imageUrl` / `createdAt` / `nameJa`（camelCase）と Postgres の lowercase 推奨から外れている点に注意する。生 SQL や RLS ポリシーで参照するときは常にダブルクォートが必要（`from('Pokemon')` は supabase-js 経由なら透過的に扱える）。`_prisma_migrations` は参照しない。
 
 ## 命名規則
 

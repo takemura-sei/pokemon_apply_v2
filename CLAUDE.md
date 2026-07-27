@@ -23,7 +23,7 @@ npm run dev
 `src/`（クライアント）、`server/`（Nitro API）、`shared/`（両者で共有する型・定数）の3層。
 コンポーネントとロジックは Nuxt の規約ディレクトリを第一階層とし、その下を機能（`pokedex` / `game`）で分ける。
 
-詳細は [architecture.md](.claude/docs/architecture.md)
+詳細は [architecture.md](.claude/docs/architecture.md)。新しいページ/機能を足すときの手順は [adding-a-feature.md](.claude/docs/adding-a-feature.md)（図鑑を参照実装とした層ごとのチェックリスト）。
 
 ## 開発フロー
 

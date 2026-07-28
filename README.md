@@ -1,75 +1,40 @@
-# Nuxt Minimal Starter
+# pokemon_apply_v2
 
-Look at the [Nuxt documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+ポケモンアプリ。図鑑や簡単なゲーム機能を提供します。
 
-## Setup
+## 技術スタック
 
-Make sure to install dependencies:
+Nuxt 4 / Vue 3 / TypeScript / Pinia / TailwindCSS v4 / Supabase / Vitest / ESLint
+
+## セットアップ
 
 ```bash
-# npm
 npm install
-
-# pnpm
-pnpm install
-
-# yarn
-yarn install
-
-# bun
-bun install
-```
-
-## Development Server
-
-Start the development server on `http://localhost:3000`:
-
-```bash
-# npm
+cp .env.example .env   # Supabase の接続情報を設定
 npm run dev
-
-# pnpm
-pnpm dev
-
-# yarn
-yarn dev
-
-# bun
-bun run dev
 ```
 
-## Production
+`http://localhost:3000` で開きます。環境変数の詳細は [.claude/docs/setup.md](.claude/docs/setup.md) を参照してください。
 
-Build the application for production:
+## コマンド
 
-```bash
-# npm
-npm run build
+| コマンド | 内容 |
+|---|---|
+| `npm run dev` | 開発サーバー起動 |
+| `npm run test` | テスト実行（1回） |
+| `npm run test:watch` | テスト実行（ウォッチモード） |
+| `npm run lint` | リント |
+| `npm run lint:fix` | リント（自動修正） |
+| `npm run typecheck` | 型チェック |
+| `npm run build` | 本番ビルド |
+| `npm run preview` | 本番ビルドのローカル確認 |
 
-# pnpm
-pnpm build
+## ディレクトリ構造
 
-# yarn
-yarn build
+`src/`（クライアント）、`server/`（Nitro API）、`shared/`（両者で共有する型・定数）の3層構成です。
 
-# bun
-bun run build
-```
+詳細は [.claude/docs/architecture.md](.claude/docs/architecture.md) を参照してください。
 
-Locally preview production build:
+## 開発フロー
 
-```bash
-# npm
-npm run preview
-
-# pnpm
-pnpm preview
-
-# yarn
-yarn preview
-
-# bun
-bun run preview
-```
-
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
+issue 駆動 + 1セッション1タスク + TDD で進めます。詳細は [.claude/docs/development.md](.claude/docs/development.md) を参照してください。

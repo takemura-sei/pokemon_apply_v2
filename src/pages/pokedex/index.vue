@@ -3,7 +3,7 @@
 import PokedexList from '~/components/pokedex/PokedexList.vue'
 import { usePokedex } from '~/composables/use-pokedex'
 
-const { list, loading, error, load } = usePokedex()
+const { list, loading, error, count, load } = usePokedex()
 
 // SSR 時に取得し、初期 HTML に反映する。
 await load()
@@ -12,7 +12,7 @@ await load()
 <template>
   <section>
     <h1 class="text-xl font-bold">
-      図鑑
+      図鑑 <span class="text-gray-400">({{ count }})</span>
     </h1>
 
     <p v-if="loading" class="py-16 text-center text-gray-500">

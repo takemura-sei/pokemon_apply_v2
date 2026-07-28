@@ -7,12 +7,13 @@ import { usePokedexStore } from '~/stores/pokedex'
  */
 export function usePokedex() {
   const store = usePokedexStore()
-  const { list, loading, error } = storeToRefs(store)
+  const { list, loading, error, count } = storeToRefs(store)
 
   return {
     list,
     loading,
     error,
+    count,
     load: store.load,
   }
 }

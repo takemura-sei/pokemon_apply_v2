@@ -49,6 +49,12 @@ describe('filterPokemons', () => {
     expect(result).toEqual([pikachu, raichu])
   })
 
+  it('keyword: 図鑑番号は3桁ゼロ埋め表記（例: 006）でもヒットする', () => {
+    // PokemonCard は「No.006」と表示するため、ユーザーが "006" で検索してもヒットさせる。
+    const result = filterPokemons(list, { keyword: '006', types: [] })
+    expect(result).toEqual([charizard])
+  })
+
   it('types: 単一タイプで絞り込む', () => {
     const result = filterPokemons(list, { keyword: '', types: ['electric'] })
     expect(result).toEqual([pikachu, raichu])

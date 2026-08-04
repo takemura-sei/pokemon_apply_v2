@@ -9,13 +9,19 @@ export interface PokedexFilterCriteria {
   types: string[]
 }
 
-/** 1 匹が検索語にマッチするか。日本語名/英名の部分一致、または図鑑番号の前方一致。 */
+/**
+ * 1 匹が検索語にマッチするか。日本語名/英名の部分一致、または図鑑番号の前方一致。
+ * 図鑑番号は生の値（例: 25）と 3 桁ゼロ埋め表示（例: 025、PokemonCard の表記）の
+ * どちらの前方一致でもヒットさせる。
+ */
 function matchesKeyword(pokemon: Pokemon, keyword: string): boolean {
   const q = keyword.toLowerCase()
+  const id = String(pokemon.id)
   return (
     pokemon.nameJa.includes(keyword)
     || pokemon.name.toLowerCase().includes(q)
-    || String(pokemon.id).startsWith(keyword)
+    || id.startsWith(keyword)
+    || id.padStart(3, '0').startsWith(keyword)
   )
 }
 

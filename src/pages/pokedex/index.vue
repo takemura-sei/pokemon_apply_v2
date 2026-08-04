@@ -1,12 +1,16 @@
-<!-- 図鑑一覧ページ。データの受け渡しに徹し、表示は PokedexList に委ねる。 -->
+<!-- 図鑑一覧ページ。取得と配線に徹し、表示は PokedexFilter / PokedexList に委ねる。 -->
 <script setup lang="ts">
+import PokedexFilter from '~/components/pokedex/PokedexFilter.vue'
 import PokedexList from '~/components/pokedex/PokedexList.vue'
 import { usePokedex } from '~/composables/use-pokedex'
+import { usePokedexFilter } from '~/composables/use-pokedex-filter'
 
 const { list, loading, error, count, load } = usePokedex()
 
 // SSR 時に取得し、初期 HTML に反映する。
 await load()
+
+const { keyword, selectedTypes, availableTypes, filtered } = usePokedexFilter(list)
 </script>
 
 <template>
@@ -21,6 +25,14 @@ await load()
     <p v-else-if="error" class="py-16 text-center text-red-500">
       {{ error }}
     </p>
-    <PokedexList v-else :pokemons="list" class="mt-4" />
+    <template v-else>
+      <PokedexFilter
+        v-model:keyword="keyword"
+        v-model:selected-types="selectedTypes"
+        :available-types="availableTypes"
+        class="mt-4"
+      />
+      <PokedexList :pokemons="filtered" class="mt-4" />
+    </template>
   </section>
 </template>

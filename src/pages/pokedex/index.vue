@@ -1,9 +1,11 @@
-<!-- 図鑑一覧ページ。取得と配線に徹し、表示は PokedexFilter / PokedexList に委ねる。 -->
+<!-- 図鑑一覧ページ。取得と配線に徹し、表示は PokedexFilter / PokedexList / Pagination に委ねる。 -->
 <script setup lang="ts">
 import PokedexFilter from '~/components/pokedex/PokedexFilter.vue'
 import PokedexList from '~/components/pokedex/PokedexList.vue'
+import Pagination from '~/components/ui/Pagination.vue'
 import { usePokedex } from '~/composables/use-pokedex'
 import { usePokedexFilter } from '~/composables/use-pokedex-filter'
+import { usePokedexPagination } from '~/composables/use-pokedex-pagination'
 
 const { list, loading, error, count, load } = usePokedex()
 
@@ -11,6 +13,7 @@ const { list, loading, error, count, load } = usePokedex()
 await load()
 
 const { keyword, selectedTypes, availableTypes, filtered } = usePokedexFilter(list)
+const { page, totalPages, paged, setPage } = usePokedexPagination(filtered)
 </script>
 
 <template>
@@ -32,7 +35,13 @@ const { keyword, selectedTypes, availableTypes, filtered } = usePokedexFilter(li
         :available-types="availableTypes"
         class="mt-4"
       />
-      <PokedexList :pokemons="filtered" class="mt-4" />
+      <PokedexList :pokemons="paged" class="mt-4" />
+      <Pagination
+        :page="page"
+        :total-pages="totalPages"
+        class="mt-6"
+        @update:page="setPage"
+      />
     </template>
   </section>
 </template>
